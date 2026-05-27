@@ -1,0 +1,31 @@
+# 配置和提示词（含敏感信息，不上传）
+conf/
+prompts/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+
+# 日志
+logs/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# uv
+.python-version
+
+# 大文件（模型权重、ES 插件等不入 git）
+docker/embedding/
+docker/elasticsearch/plugins/
