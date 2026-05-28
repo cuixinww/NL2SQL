@@ -1,6 +1,6 @@
 # 配置和提示词（含敏感信息，不上传）
-conf/
-prompts/
+/conf/
+/prompts/
 
 # Python
 __pycache__/

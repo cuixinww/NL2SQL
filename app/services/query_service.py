@@ -9,6 +9,10 @@ from app.repositories.qdrant import ColumnQdrantRepository,MetricQdrantRepositor
 from app.clients.embedding_client_manager import EmbeddingClientManager
 from langchain_openai import OpenAIEmbeddings
 import json
+import asyncio
+
+# 单次查询超时（秒）
+QUERY_TIMEOUT = 120
 
 class QueryService:
     
@@ -48,10 +52,12 @@ class QueryService:
                 )
         # 执行查询图
         try:
-            
-            async for chunk in graph.astream(input=input,context=content,stream_mode="custom"):
-                yield f"data: {json.dumps(chunk, ensure_ascii=False, default=str)} \n\n"
+            async with asyncio.timeout(QUERY_TIMEOUT):
+                async for chunk in graph.astream(input=input, context=content, stream_mode="custom"):
+                    yield f"data: {json.dumps(chunk, ensure_ascii=False, default=str)} \n\n"
+        except TimeoutError:
+            yield f"data: {json.dumps({'type': 'error', 'message': f'查询超时（{QUERY_TIMEOUT}秒）'}, ensure_ascii=False)} \n\n"
         except Exception as e:
-            yield f"data: {json.dumps({"type":"error","message":str(e)}, ensure_ascii=False, default=str)} \n\n"
+            yield f"data: {json.dumps({'type': 'error', 'message': str(e)}, ensure_ascii=False, default=str)} \n\n"
 
        

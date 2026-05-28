@@ -5,7 +5,8 @@ from langchain_core.language_models import BaseChatModel
 def create_llm(
     model_name: str | None = None,
     temperature: float = 0,
-    streaming: bool = False,) -> BaseChatModel:
+    streaming: bool = False,
+    timeout: int = 60,) -> BaseChatModel:
 
     return init_chat_model(
         model=model_name or app_config.llm.model_name,
@@ -15,6 +16,7 @@ def create_llm(
         temperature=temperature,
         streaming=streaming,
         verbose=False,
+        timeout=timeout,
     )
 
 
