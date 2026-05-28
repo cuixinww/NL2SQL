@@ -115,7 +115,7 @@ uv sync
 
 ### 4. 配置文件
 
-在 `conf/` 目录下创建配置文件（参考 data-agent 项目模板）：
+在 `conf/` 目录下创建配置文件：
 
 - `conf/app_config.yaml` — 数据库连接、LLM 配置
 - `conf/meta_config.yaml` — 表/字段/指标/表关系元数据定义
@@ -138,52 +138,6 @@ python -m app.main
 ```
 
 服务启动后访问 http://localhost:8000，前端页面默认在 http://localhost:5173。
-
-## 项目结构
-
-```
-bank-agent/
-├── app/
-│   ├── agent/              # LangGraph Agent
-│   │   ├── graph.py        # 状态图定义（12 节点）
-│   │   ├── state.py        # 状态 Schema
-│   │   ├── context.py      # 运行时上下文
-│   │   ├── llm.py          # LLM 工厂
-│   │   └── nodes/          # 各节点实现
-│   │       ├── extract_keywords.py    # 关键词提取
-│   │       ├── recall_column.py       # 字段语义召回
-│   │       ├── recall_metric.py       # 指标语义召回
-│   │       ├── recall_value.py        # 枚举值召回
-│   │       ├── merge_retrieved_info.py # 信息合并 + JOIN 推导
-│   │       ├── filter_metric.py       # 指标过滤
-│   │       ├── filter_table.py        # 表过滤
-│   │       ├── add_extra_context.py   # 业务口径注入
-│   │       ├── generate_sql.py        # SQL 生成
-│   │       ├── validate_sql.py        # SQL 校验
-│   │       ├── correct_sql.py         # SQL 纠错
-│   │       └── execute_sql.py         # SQL 执行
-│   ├── api/                # FastAPI 接口
-│   ├── clients/            # 外部服务客户端
-│   ├── core/               # 日志、上下文
-│   ├── entities/           # 领域实体
-│   ├── models/             # ORM 模型
-│   ├── prompt/             # 提示词加载器
-│   ├── repositories/       # 数据访问层
-│   │   ├── mysql/meta/     # 元数据 Repository
-│   │   ├── mysql/dw/       # 业务数据 Repository
-│   │   ├── qdrant/         # 向量召回 Repository
-│   │   └── es/             # 枚举值 Repository
-│   ├── scripts/            # 元数据构建脚本
-│   └── services/           # 业务服务层
-├── conf/                   # 配置文件（不入 git）
-├── prompts/                # 提示词模板（不入 git）
-├── docker/                 # Docker 基础设施
-│   ├── docker-compose.yaml
-│   ├── mysql/              # 初始化 SQL
-│   ├── elasticsearch/      # ES + IK 分词器
-│   └── embedding/          # Embedding 模型
-└── main.py                 # FastAPI 入口
-```
 
 ## 示例问题
 
