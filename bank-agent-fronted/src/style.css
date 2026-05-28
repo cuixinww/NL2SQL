@@ -1,0 +1,6 @@
+/* 全局基础样式 - 由 App.vue scoped 样式主导，这里仅做最简重置 */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
