@@ -49,7 +49,7 @@ async def validate_sql(state: DataAgentState, runtime: Runtime[ContextSchema]):
             raise Exception(f"SQL校验不通过: {violation_text}")
 
         # 2 使用explain验证sql是否符合语法
-        await runtime.context.dw_mysql_repository.validate_sql(sql)
+        await runtime.context.bank_mysql_repository.validate_sql(sql)
         writer({"type": "progress", "step": "验证SQL", "status": "success"})
         logger.info(f"SQL验证成功: {sql}")
         return {"error": None, "violations": [], "suggestions": [], "retry_count": retry_count}

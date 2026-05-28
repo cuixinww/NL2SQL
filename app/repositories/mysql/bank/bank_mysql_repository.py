@@ -14,7 +14,7 @@ MAX_ROWS = 1000
 QUERY_TIMEOUT_SECONDS = 30
 
 
-class DWMySQLRepository:
+class BankMySQLRepository:
     def __init__(self, session: AsyncSession):
         self.session = session
 

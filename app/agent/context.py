@@ -3,7 +3,7 @@ from app.repositories.qdrant import ColumnQdrantRepository
 from app.repositories.qdrant import MetricQdrantRepository
 from app.repositories.es import ValueESRepository
 from app.repositories.mysql.meta import MetaMySQLRepository
-from app.repositories.mysql.dw import DWMySQLRepository
+from app.repositories.mysql.bank import BankMySQLRepository
 from langchain_openai import OpenAIEmbeddings
 
 
@@ -14,5 +14,5 @@ class ContextSchema:
     value_es_repository: ValueESRepository
     embedding_client: OpenAIEmbeddings
     meta_repository: MetaMySQLRepository
-    dw_mysql_repository: DWMySQLRepository
+    bank_mysql_repository: BankMySQLRepository
 

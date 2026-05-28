@@ -11,7 +11,7 @@ async def execute_sql(state: DataAgentState, runtime: Runtime[ContextSchema]):
     try:
       sql = state["sql"]
       # 执行SQL语句
-      result = await runtime.context.dw_mysql_repository.execute_sql(sql)
+      result = await runtime.context.bank_mysql_repository.execute_sql(sql)
       writer({"type": "progress", "step": "执行SQL", "status": "success"})
       writer({"type": "result", "data": result})
       logger.info(f"成功执行SQL,执行结果: {result}")

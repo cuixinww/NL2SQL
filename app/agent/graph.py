@@ -6,12 +6,12 @@ from app.repositories.qdrant import ColumnQdrantRepository
 from app.repositories.qdrant import MetricQdrantRepository
 from app.repositories.es import ValueESRepository
 from app.repositories.mysql.meta import MetaMySQLRepository
-from app.repositories.mysql.dw import DWMySQLRepository
+from app.repositories.mysql.bank import BankMySQLRepository
 from app.clients import embedding_client_manager
 from app.clients import qdrant_client_manager
 from app.clients import es_client_manager
 from app.clients import meta_mysql_client_manager
-from app.clients import dw_mysql_client_manager
+from app.clients import bank_mysql_client_manager
 from app.agent.nodes import *
 import asyncio
 
@@ -72,18 +72,18 @@ if __name__ == "__main__":
         embedding_client_manager.init()
         es_client_manager.init()
         meta_mysql_client_manager.init()
-        dw_mysql_client_manager.init()
+        bank_mysql_client_manager.init()
 
 
         query = "统计华北地区的销售总额。"
         input = DataAgentState(query=query)
         async with meta_mysql_client_manager.session_factory() as meta_Session, \
-             dw_mysql_client_manager.session_factory() as dw_Session:
+             bank_mysql_client_manager.session_factory() as dw_Session:
             column_qdrant_repository = ColumnQdrantRepository(qdrant_client_manager.client)
             metric_qdrant_repository = MetricQdrantRepository(qdrant_client_manager.client)
             value_es_repository = ValueESRepository(es_client_manager.es_client)
             meta_mysql_repository = MetaMySQLRepository(meta_Session)
-            dw_mysql_repository = DWMySQLRepository(dw_Session)
+            bank_mysql_repository = BankMySQLRepository(dw_Session)
 
             content = ContextSchema(
                 column_qdrant_repository=column_qdrant_repository,
@@ -91,7 +91,7 @@ if __name__ == "__main__":
                 value_es_repository=value_es_repository,
                 embedding_client=embedding_client_manager.client,
                 meta_repository=meta_mysql_repository,
-                dw_mysql_repository=dw_mysql_repository
+                bank_mysql_repository=bank_mysql_repository
                 )
         
             async for chunk in graph.astream(input=input,context=content,stream_mode="custom"):

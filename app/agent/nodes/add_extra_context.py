@@ -19,7 +19,7 @@ async def add_extra_context(state: DataAgentState, runtime: Runtime[ContextSchem
       # 季度
       quarter = f"Q{(today.month - 1) // 3 + 1}"
       date_info = DateInfoState(date=date, weekday=weekday, quarter=quarter)
-      db_info = await runtime.context.dw_mysql_repository.get_db_info()
+      db_info = await runtime.context.bank_mysql_repository.get_db_info()
       # 数据库信息
       db_info = DBInfoState(**db_info)
       writer({"type": "progress", "step": "添加额外上下文", "status": "success"})

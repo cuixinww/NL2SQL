@@ -4,13 +4,13 @@ from app.repositories.qdrant import ColumnQdrantRepository
 from app.repositories.qdrant import MetricQdrantRepository
 from app.repositories.es import ValueESRepository
 from app.repositories.mysql.meta import MetaMySQLRepository
-from app.repositories.mysql.dw import DWMySQLRepository
+from app.repositories.mysql.bank import BankMySQLRepository
 from langchain_openai import OpenAIEmbeddings
 from app.clients import embedding_client_manager
 from app.clients import qdrant_client_manager
 from app.clients import es_client_manager
 from app.clients import meta_mysql_client_manager
-from app.clients import dw_mysql_client_manager
+from app.clients import bank_mysql_client_manager
 from typing import Annotated
 from fastapi import Depends
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -48,11 +48,11 @@ async def get_meta_mysql_session():
     async with meta_mysql_client_manager.session_factory() as meta_Session:
         yield meta_Session
     
-async def get_dw_mysql_session():
+async def get_bank_mysql_session():
     """
     获取DW MySQL仓库异步会话
     """
-    async with dw_mysql_client_manager.session_factory() as dw_Session:
+    async with bank_mysql_client_manager.session_factory() as dw_Session:
         yield dw_Session
     
 async def get_meta_mysql_repository(session: Annotated[AsyncSession, Depends(get_meta_mysql_session)]) -> MetaMySQLRepository:
@@ -61,11 +61,11 @@ async def get_meta_mysql_repository(session: Annotated[AsyncSession, Depends(get
     """
     return MetaMySQLRepository(session)
 
-async def get_dw_mysql_repository(session: Annotated[AsyncSession, Depends(get_dw_mysql_session)]) -> DWMySQLRepository:
+async def get_bank_mysql_repository(session: Annotated[AsyncSession, Depends(get_bank_mysql_session)]) -> BankMySQLRepository:
     """
     获取DW MySQL仓库
     """
-    return DWMySQLRepository(session)
+    return BankMySQLRepository(session)
 
 
 
@@ -76,7 +76,7 @@ async def get_query_service(
     metric_qdrant_repository: Annotated[MetricQdrantRepository, Depends(get_metric_qdrant_repository)],
     value_es_repository: Annotated[ValueESRepository, Depends(get_value_es_repository)],
     meta_mysql_repository: Annotated[MetaMySQLRepository, Depends(get_meta_mysql_repository)],
-    dw_mysql_repository: Annotated[DWMySQLRepository, Depends(get_dw_mysql_repository)],
+    bank_mysql_repository: Annotated[BankMySQLRepository, Depends(get_bank_mysql_repository)],
 ) -> QueryService:
     """
     获取查询服务
@@ -86,5 +86,5 @@ async def get_query_service(
                         metric_qdrant_repository=metric_qdrant_repository,
                         value_es_repository=value_es_repository,
                         meta_mysql_repository=meta_mysql_repository,
-                        dw_mysql_repository=dw_mysql_repository)
+                        bank_mysql_repository=bank_mysql_repository)
         

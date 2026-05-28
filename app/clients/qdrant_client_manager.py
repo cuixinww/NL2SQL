@@ -26,6 +26,7 @@ class QdrantClientManager:
         logger.info("初始化Qdrant客户端")
         self.client = AsyncQdrantClient(
             url=self.get_url(),
+            check_compatibility=False,
         )
         logger.info("Qdrant客户端初始化完成")
 

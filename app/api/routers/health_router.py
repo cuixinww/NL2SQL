@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.clients import meta_mysql_client_manager, dw_mysql_client_manager, qdrant_client_manager, es_client_manager
+from app.clients import meta_mysql_client_manager, bank_mysql_client_manager, qdrant_client_manager, es_client_manager
 from sqlalchemy import text
 
 health_router = APIRouter()
@@ -19,11 +19,11 @@ async def health_check():
 
     # MySQL dw
     try:
-        async with dw_mysql_client_manager.session_factory() as session:
+        async with bank_mysql_client_manager.session_factory() as session:
             await session.execute(text("SELECT 1"))
-        checks["mysql_dw"] = "ok"
+        checks["mysql_bank"] = "ok"
     except Exception as e:
-        checks["mysql_dw"] = f"error: {e}"
+        checks["mysql_bank"] = f"error: {e}"
 
     # Qdrant
     try:

@@ -57,7 +57,7 @@ class MysqlClientManager:
         return f"mysql+asyncmy://{self.mysql_config.user}:{self.mysql_config.password}@{self.mysql_config.host}:{self.mysql_config.port}/{self.mysql_config.database}?charset=utf8mb4"
 
 
-dw_mysql_client_manager = MysqlClientManager(app_config.db_dw)
+bank_mysql_client_manager = MysqlClientManager(app_config.db_bank)
 meta_mysql_client_manager = MysqlClientManager(app_config.db_meta)
 
 if __name__ == "__main__":
@@ -65,8 +65,8 @@ if __name__ == "__main__":
     import asyncio
 
     async def test():
-        dw_mysql_client_manager.init()
-        async with dw_mysql_client_manager.session_factory() as conn:
+        bank_mysql_client_manager.init()
+        async with bank_mysql_client_manager.session_factory() as conn:
             sql = "select * from dw.dim_customer"
             result = await conn.execute(text(sql))
             print(type(result))

@@ -6,8 +6,8 @@ services:
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: Atguigu.123
-      MYSQL_USER: atguigu
-      MYSQL_PASSWORD: Atguigu.123
+      MYSQL_USER: nltosql
+      MYSQL_PASSWORD: nltosql.123
     ports:
       - "3306:3306"
     volumes:

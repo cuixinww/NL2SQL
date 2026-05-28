@@ -2,7 +2,7 @@ from app.core import logger
 from app.conf import load_config
 from app.conf.meta_config import MetaConfig
 from app.repositories.mysql.meta import MetaMySQLRepository
-from app.repositories.mysql.dw import DWMySQLRepository
+from app.repositories.mysql.bank import BankMySQLRepository
 from app.repositories.qdrant import ColumnQdrantRepository
 from app.repositories.es import ValueESRepository
 from app.repositories.qdrant import MetricQdrantRepository
@@ -28,14 +28,14 @@ class MetaKnowledgeService:
     """
     def __init__(self,
                     meta_mysql_repository: MetaMySQLRepository,
-                    dw_mysql_repository: DWMySQLRepository,
+                    bank_mysql_repository: BankMySQLRepository,
                     column_qdrant_repository: ColumnQdrantRepository,
                     embedding_client: OpenAIEmbeddings,
                     value_es_repository: ValueESRepository,
                     metric_qdrant_repository: MetricQdrantRepository
                 ):
         self.meta_mysql_repository = meta_mysql_repository
-        self.dw_mysql_repository = dw_mysql_repository
+        self.bank_mysql_repository = bank_mysql_repository
         self.column_qdrant_repository = column_qdrant_repository
         self.embedding_client = embedding_client
         self.value_es_repository = value_es_repository
@@ -60,10 +60,10 @@ class MetaKnowledgeService:
             table_infos.append(table_info)
 
             # 查询该表的所有字段类型
-            column_types: dict[str, str] = await self.dw_mysql_repository.get_column_types(table.db_schema, table.name)
+            column_types: dict[str, str] = await self.bank_mysql_repository.get_column_types(table.db_schema, table.name)
             for column in table.columns:
                 # 查询该字段的部分取值作为示例
-                column_values: list = await self.dw_mysql_repository.get_column_values(table.db_schema, table.name, column.name, 10)
+                column_values: list = await self.bank_mysql_repository.get_column_values(table.db_schema, table.name, column.name, 10)
                 column_values = [_serialize_value(v) for v in column_values]
 
                 column_info = ColumnInfo(
@@ -141,7 +141,7 @@ class MetaKnowledgeService:
                 table_name = column_info.table_id.split(".")[-1]
                 column_name = column_info.name
                 db_schema = column_info.table_id.split(".")[0]
-                values = await self.dw_mysql_repository.get_all_column_values(
+                values = await self.bank_mysql_repository.get_all_column_values(
                     db_schema, table_name, column_name
                 )
                 values = [_serialize_value(v) for v in values]
